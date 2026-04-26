@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DynamicCalcApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+126801ed234cff074f28857e6d3184221b11d9ec")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5aaebd1814d34c7e0580da6fc5abc6476df4d59e")]
 [assembly: System.Reflection.AssemblyProductAttribute("DynamicCalcApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DynamicCalcApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

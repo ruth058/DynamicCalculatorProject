@@ -25,7 +25,7 @@ namespace DynamicCalcApi.Controllers
            return Ok(new { 
                 Success = true, 
                 Message = "Calculation completed and saved to database.",
-                Details = resultsSummary
+                Details = summary
             });
         }
     }
