@@ -11,6 +11,7 @@ using System.Data;
 using DynamicCalcApi.BL;
 using NCalc;
 
+
 namespace DynamicCalcApi.BL
 {
     public class t_data { 
