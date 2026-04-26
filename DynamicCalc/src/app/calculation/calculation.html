@@ -1,0 +1,58 @@
+<!-- <button (click)="runAll()">Run All</button> -->
+
+<!-- 
+<table >
+  <thead>
+    <tr>
+      <th>נוסחה</th>
+      <th>V1 (שניות)</th>
+      <th>V2 (שניות)</th>
+      <th>V3 (שניות)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of data">
+      <td>{{ row.targil }}</td>
+      <td>{{ row.v1 }}</td>
+      <td>{{ row.v2 }}</td>
+      <td>{{ row.v3 }}</td>
+    </tr>
+  </tbody>
+</table> -->
+
+<div class="page">
+
+  <button class="run-btn" (click)="runAll()">
+    Run All
+  </button>
+<!-- <div *ngIf="loading">טוען...</div> -->
+<div class="loading-overlay" *ngIf="loading">
+  <div class="spinner"></div>
+  <div class="text">Running calculations...</div>
+</div>
+  <div  *ngIf="!loading && data.length" class="grid">
+    <div class="card" *ngFor="let item of data">
+
+      <div class="title">
+        {{ item.targil }}
+      </div>
+
+      <div class="row v1">
+        <span>DynamicExpresso</span>
+        <b>{{ item.v1 }}s</b>
+      </div>
+
+      <div class="row v2">
+        <span>Sql Dynamic</span>
+        <b>{{ item.v2 }}s</b>
+      </div>
+
+      <div class="row v3">
+        <span>Data Table</span>
+        <b>{{ item.v3 }}s</b>
+      </div>
+
+    </div>
+  </div>
+
+</div>
