@@ -22,9 +22,10 @@ namespace DynamicCalcApi.Controllers
             var summary = new List<object>();
             summary=CalculatorBL.RunDynamicExpresso();
       
-            return Ok(new { 
+           return Ok(new { 
+                Success = true, 
                 Message = "Calculation completed and saved to database.",
-                Summary = summary 
+                Details = resultsSummary
             });
         }
     }

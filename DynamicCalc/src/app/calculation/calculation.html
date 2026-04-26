@@ -1,58 +1,112 @@
-<!-- <button (click)="runAll()">Run All</button> -->
-
-<!-- 
-<table >
-  <thead>
-    <tr>
-      <th>נוסחה</th>
-      <th>V1 (שניות)</th>
-      <th>V2 (שניות)</th>
-      <th>V3 (שניות)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let row of data">
-      <td>{{ row.targil }}</td>
-      <td>{{ row.v1 }}</td>
-      <td>{{ row.v2 }}</td>
-      <td>{{ row.v3 }}</td>
-    </tr>
-  </tbody>
-</table> -->
-
 <div class="page">
-
-  <button class="run-btn" (click)="runAll()">
-    Run All
-  </button>
-<!-- <div *ngIf="loading">טוען...</div> -->
-<div class="loading-overlay" *ngIf="loading">
-  <div class="spinner"></div>
-  <div class="text">Running calculations...</div>
-</div>
-  <div  *ngIf="!loading && data.length" class="grid">
-    <div class="card" *ngFor="let item of data">
-
-      <div class="title">
-        {{ item.targil }}
+  <div class="header">
+    <h1>Benchmark Analyzer</h1>
+    <div class="progress-container">
+      <div class="progress-bar" [style.width.%]="(currentStep - 1) * 33.3"></div>
+      <div class="steps">
+        <div class="step-circle" [class.done]="currentStep > 1" [class.active]="currentStep === 1">1</div>
+        <div class="step-circle" [class.done]="currentStep > 2" [class.active]="currentStep === 2">2</div>
+        <div class="step-circle" [class.done]="currentStep > 3" [class.active]="currentStep === 3">3</div>
       </div>
-
-      <div class="row v1">
-        <span>DynamicExpresso</span>
-        <b>{{ item.v1 }}s</b>
-      </div>
-
-      <div class="row v2">
-        <span>Sql Dynamic</span>
-        <b>{{ item.v2 }}s</b>
-      </div>
-
-      <div class="row v3">
-        <span>Data Table</span>
-        <b>{{ item.v3 }}s</b>
-      </div>
-
     </div>
   </div>
 
+  <div class="actions-bar">
+ <button class="btn v1"
+  [disabled]="currentStep !== 1 || loading || completedSteps.has(1)"
+  (click)="runStep(1)">
+  Expresso
+</button>
+
+<button class="btn v2"
+  [disabled]="currentStep !== 2 || loading || completedSteps.has(2)"
+  (click)="runStep(2)">
+  SQL Server
+</button>
+
+<button class="btn v3"
+  [disabled]="currentStep !== 3 || loading || completedSteps.has(3)"
+  (click)="runStep(3)">
+  Data Table
+</button>
+    
+    <button class="btn-report animate-pop" *ngIf="currentStep === 4 && !showReport" (click)="printReport()">
+      🚀 הצג דוח השוואתי
+    </button>
+  </div>
+
+  <div class="loading-area" *ngIf="loading">
+    <div class="pulse-loader"></div>
+    <p>מעבד נתונים מהשרת...</p>
+  </div>
+
+  <!-- <div class="results-container" *ngIf="showReport">
+    <div class="grid">
+      <div class="card" *ngFor="let item of data">
+        <div class="card-title">{{ item.targil }}</div>
+        <div class="card-content">
+          <div class="metric blue">
+            <label>DynamicExpresso</label>
+            <span class="value">{{ item.v1 ? (item.v1 | number:'1.2-4') + 's' : '---' }}</span>
+          </div>
+          <div class="metric green">
+            <label>SQL Dynamic</label>
+            <span class="value">{{ item.v2 ? (item.v2 | number:'1.2-4') + 's' : '---' }}</span>
+          </div>
+          <div class="metric red">
+            <label>Data Table</label>
+            <span class="value">{{ item.v3 ? (item.v3 | number:'1.2-4') + 's' : '---' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ -->
+
+
+<div class="results-container" *ngIf="showReport">
+  <div class="report-header">
+    <h2>📊 דו"ח ביצועים השוואתי</h2>
+    <p>השוואת זמני ריצה (בשניות) עבור מיליון רשומות</p>
+  </div>
+
+  <div class="report-grid">
+    <div class="calculation-card" *ngFor="let item of data">
+      <div class="card-header">
+        <span class="formula-label">נוסחה:</span>
+        <code class="formula-text">{{ item.targil }}</code>
+      </div>
+      
+      <div class="card-body">
+        <div class="result-row blue">
+          <div class="method-info">
+            <span class="dot"></span>
+            <span class="method-name">Dynamic Expresso</span>
+          </div>
+          <span class="time-value">{{ item.v1 | number:'1.3-3' }}s</span>
+        </div>
+
+        <div class="result-row green">
+          <div class="method-info">
+            <span class="dot"></span>
+            <span class="method-name">SQL Dynamic</span>
+          </div>
+          <span class="time-value">{{ item.v2 | number:'1.3-3' }}s</span>
+        </div>
+
+        <div class="result-row red">
+          <div class="method-info">
+            <span class="dot"></span>
+            <span class="method-name">Data Table / NCalc</span>
+          </div>
+          <span class="time-value">{{ item.v3 | number:'1.3-3' }}s</span>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <span class="winner-tag">🚀 הכי מהיר: <b>SQL Dynamic</b></span>
+      </div>
+    </div>
+  </div>
 </div>

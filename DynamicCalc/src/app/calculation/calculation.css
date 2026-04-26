@@ -1,119 +1,183 @@
-/* כל הדף */
 .page {
-  padding: 20px;
   background: #0f172a;
   min-height: 100vh;
-  font-family: Arial, sans-serif;
+  padding: 40px;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  direction: rtl;
 }
 
-/* כפתור */
-.run-btn {
-  background: linear-gradient(135deg, #4f46e5, #06b6d4);
-  color: white;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 12px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-bottom: 20px;
+.header { text-align: center; margin-bottom: 50px; }
+.header h1 { color: white; font-size: 2.2rem; margin-bottom: 30px; }
+
+/* Progress Bar */
+.progress-container { width: 300px; margin: 0 auto; position: relative; }
+.progress-bar { height: 4px; background: #3b82f6; position: absolute; top: 15px; transition: 0.4s; z-index: 1; }
+.steps { display: flex; justify-content: space-between; position: relative; z-index: 2; }
+.step-circle { 
+  width: 34px; height: 34px; background: #1e293b; border: 2px solid #334155; 
+  border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #94a3b8;
+}
+.step-circle.active { border-color: #3b82f6; color: #3b82f6; box-shadow: 0 0 10px #3b82f6; }
+.step-circle.done { background: #3b82f6; border-color: #3b82f6; color: white; }
+
+.actions-bar { display: flex; gap: 15px; justify-content: center; margin: 40px 0; }
+
+.btn {
+  padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;
+  background: #1e293b; color: #94a3b8; transition: 0.3s;
+}
+.btn:not(:disabled):hover { transform: scale(1.05); color: white; }
+.v1:not(:disabled) { border-bottom: 3px solid #3b82f6; }
+.v2:not(:disabled) { border-bottom: 3px solid #22c55e; }
+.v3:not(:disabled) { border-bottom: 3px solid #ef4444; }
+
+.btn-report {
+  background: #f59e0b; color: white; padding: 12px 30px; border-radius: 12px;
+  border: none; font-weight: bold; cursor: pointer;
 }
 
-.run-btn:hover {
-  opacity: 0.9;
+.loading-area { text-align: center; color: #94a3b8; }
+.pulse-loader {
+  width: 40px; height: 40px; background: #3b82f6; border-radius: 50%;
+  margin: 0 auto 15px; animation: pulse 1.5s infinite ease-in-out;
 }
 
-/* grid של cards */
-.grid {
+@keyframes pulse {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.2); opacity: 0; }
+}
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.card { background: #1e293b; border-radius: 15px; padding: 20px; border: 1px solid #334155; }
+.card-title { color: #f8fafc; font-weight: bold; font-family: monospace; margin-bottom: 15px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
+
+.metric { display: flex; justify-content: space-between; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px; font-size: 14px; }
+.metric label { font-weight: 500; }
+.blue { background: rgba(59, 130, 246, 0.1); color: #60a5fa; }
+.green { background: rgba(34, 197, 94, 0.1); color: #4ade80; }
+.red { background: rgba(239, 68, 68, 0.1); color: #f87171; }
+
+/* מיכל ראשי */
+.results-container {
+  margin-top: 30px;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.report-header {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #f8fafc;
+}
+
+.report-header h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  background: linear-gradient(90deg, #60a5fa, #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* גריד של כרטיסיות */
+.report-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 25px;
 }
 
-/* card */
-.card {
-  background: #1e293b;
+/* כרטיסייה בודדת */
+.calculation-card {
+  background: #1e293b; /* כחול-כהה הייטקי */
+  border: 1px solid #334155;
   border-radius: 16px;
-  padding: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-  transition: transform 0.2s ease;
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-.card:hover {
+.calculation-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  border-color: #475569;
 }
 
-/* כותרת נוסחה */
-.title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #e2e8f0;
-  margin-bottom: 12px;
+/* כותרת הכרטיסייה - הנוסחה */
+.card-header {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed #334155;
 }
 
-/* שורה */
-.row {
+.formula-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.formula-text {
+  font-family: 'Fira Code', monospace;
+  font-size: 1.1rem;
+  color: #38bdf8;
+  background: #0f172a;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+/* שורות התוצאה */
+.result-row {
   display: flex;
   justify-content: space-between;
-  padding: 8px 10px;
-  border-radius: 10px;
-  margin-bottom: 6px;
-  color: #e2e8f0;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.method-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.time-value {
+  font-weight: bold;
+  font-variant-numeric: tabular-nums;
 }
 
 /* צבעים לפי שיטה */
-.v1 {
-  background: rgba(59, 130, 246, 0.15);
-}
+.blue { background: rgba(59, 130, 246, 0.1); color: #60a5fa; }
+.blue .dot { background: #3b82f6; }
 
-.v2 {
-  background: rgba(34, 197, 94, 0.15);
-}
+.green { background: rgba(34, 197, 94, 0.1); color: #4ade80; }
+.green .dot { background: #22c55e; }
 
-.v3 {
-  background: rgba(239, 68, 68, 0.15);
-}
+.red { background: rgba(239, 68, 68, 0.1); color: #f87171; }
+.red .dot { background: #ef4444; }
 
-/* טקסט זמן */
-.row b {
-  color: white;
-}
-
-/* שכבה מעל כל המסך */
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(15, 23, 42, 0.85);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-/* ספינר */
-.spinner {
-  width: 60px;
-  height: 60px;
-  border: 6px solid rgba(255,255,255,0.2);
-  border-top: 6px solid #06b6d4;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-/* טקסט */
-.text {
+/* פוטר הכרטיסייה */
+.card-footer {
   margin-top: 15px;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  letter-spacing: 1px;
+  text-align: right;
 }
 
-/* אנימציה */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.winner-tag {
+  font-size: 0.85rem;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* אנימציה כניסה */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
