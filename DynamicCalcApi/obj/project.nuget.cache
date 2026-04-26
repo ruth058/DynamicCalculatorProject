@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "5cg61q73R1U=",
+  "success": true,
+  "projectFilePath": "/workspaces/DynamicCalculatorProject/DynamicCalcApi/DynamicCalcApi.csproj",
+  "expectedPackageFiles": [
+    "/home/codespace/.nuget/packages/extendednumerics.bigdecimal/3003.0.0.346/extendednumerics.bigdecimal.3003.0.0.346.nupkg.sha512",
+    "/home/codespace/.nuget/packages/microsoft.aspnetcore.openapi/10.0.4/microsoft.aspnetcore.openapi.10.0.4.nupkg.sha512",
+    "/home/codespace/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512",
+    "/home/codespace/.nuget/packages/ncalc.core/5.12.0/ncalc.core.5.12.0.nupkg.sha512",
+    "/home/codespace/.nuget/packages/ncalcsync/5.12.0/ncalcsync.5.12.0.nupkg.sha512",
+    "/home/codespace/.nuget/packages/parlot/1.5.7/parlot.1.5.7.nupkg.sha512"
+  ],
+  "logs": []
+}
