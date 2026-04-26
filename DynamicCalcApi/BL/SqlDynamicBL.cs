@@ -10,6 +10,7 @@ namespace DynamicCalcApi.BL
   {
         private static readonly string _connectionString = "Data Source=calculator.db";
 
+//פונקציה זו עוברת על כל תרגיל ובונה שאילתא דינאמית בהתאם לנתונים
         public static List<object> RunSqlDynamic()
         {
             var resultsSummary = new List<object>();
@@ -25,8 +26,7 @@ namespace DynamicCalcApi.BL
 
 
 
-            // 1. שליפת רשימת התרגילים (כדי לדעת איזה SQL דינמי לבנות)
-         //   var tasks = new List<CalculationTask>();
+            // שליפת רשימת התרגילים 
             using (var cmd = new SqliteCommand("SELECT * FROM t_targil", connection))
             using (var reader = cmd.ExecuteReader())
             {
@@ -44,6 +44,7 @@ namespace DynamicCalcApi.BL
 
             try
             {
+                //מעבר על כל התרגילים 
                 foreach (var f in formulas)
                 {
                  string dynamicSql;
@@ -64,13 +65,14 @@ namespace DynamicCalcApi.BL
                             FROM t_data";
                     }
 
+//הרצת השאילתא הדינאמית שנוצרה בהתאם לתנאים
                     using (var calcCmd = new SqliteCommand(dynamicSql, connection, transaction))
                     {
                         calcCmd.ExecuteNonQuery();
                     }
                     totalSw.Stop(); 
 
-                      // רישום לוג עבור התרגיל שזה עתה הסתיים
+                      // רישום לוג עבור התרגיל הנוכחי 
                     using (var logCmd = new SqliteCommand("INSERT INTO t_log (targil_id, method, run_time) VALUES (@tid, 'SQL_Dynamic', @time)", connection, transaction))
                     {
                         logCmd.Parameters.AddWithValue("@tid", f.targil_id);
@@ -86,7 +88,7 @@ namespace DynamicCalcApi.BL
                         TimeSeconds = totalSw.Elapsed.TotalSeconds
                     });
                 }
-                 // שמירה סופית של הכל לדיסק
+                 // שמירה סופית של הכל 
                 transaction.Commit();
                
             }

@@ -14,7 +14,6 @@ namespace DynamicCalcApi.Controllers
     [Route("api/v1/run-calc")] 
      public  class CalculatorController : ControllerBase
     {
-        //private static readonly string _connectionString = "Data Source=calculator.db";
         [HttpGet]
         [Route("run-dynamic-expresso")]
 

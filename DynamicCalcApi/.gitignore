@@ -1,0 +1,20 @@
+# Build folders
+bin/
+obj/
+
+# Databases (SQLite)
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# Visual Studio / VS Code
+.vscode/
+*.user
+*.suo
+
+# OS files
+.DS_Store
+Thumbs.db

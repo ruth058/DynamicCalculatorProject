@@ -7,6 +7,7 @@ namespace DynamicCalcApi.Controllers
     [Route("api/MainCalcController")]
     public class MainCalcController : ControllerBase
     {
+        //פונקציה שקוראת לכל שלושת השיטות
         [HttpGet("run-all")]
         public IActionResult runAll()
         {
@@ -28,7 +29,6 @@ namespace DynamicCalcApi.Controllers
             }
             catch (System.Exception ex)
             {
-                // אם קרתה שגיאה באחת מהן, התהליך ייעצר כאן ולא ימשיך לבאות
                 return StatusCode(500, $"Sequence interrupted: {ex.Message}");
             }
         }

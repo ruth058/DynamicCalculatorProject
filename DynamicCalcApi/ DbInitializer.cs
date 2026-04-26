@@ -14,10 +14,9 @@ namespace DynamicCalcApi
                 connection.Open();
                 Console.WriteLine("--- Starting Database Initialization ---");
 
-                // 1. יצירת הטבלאות אם הן לא קיימות
+                //יצירת הטבלאות אם הן לא קיימות
                 CreateTables(connection);
 
-                // 2. הפעלת מפתחות זרים
                 using (var cmd = connection.CreateCommand())
                 {
                     cmd.CommandText = "PRAGMA foreign_keys = ON;";
@@ -104,7 +103,7 @@ namespace DynamicCalcApi
        INSERT INTO t_targil (targil, tnai, targil_false) VALUES ('log(b) + c', NULL, NULL);
        INSERT INTO t_targil (targil, tnai, targil_false) VALUES ('abs(d - b)', NULL, NULL);
 
-                    -- נוסחה עם תנאי (לבקשתך)
+                    -- נוסחה עם תנאי 
                     INSERT INTO t_targil (targil, tnai, targil_false) VALUES ('a + b', 'a > 50', 'b * 2');";
                 
                 cmd.ExecuteNonQuery();
@@ -149,7 +148,7 @@ namespace DynamicCalcApi
                 Console.WriteLine($"t_data already has {dataCount} rows. Skipping data insert.");
             }
         }
-
+//פונקציה שמחזירה כמה רשומות יש לטבלה מסוימת
         private static long GetCount(SqliteConnection conn, string tableName)
         {
             using var cmd = conn.CreateCommand();

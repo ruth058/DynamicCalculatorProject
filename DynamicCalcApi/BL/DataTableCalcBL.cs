@@ -36,13 +36,12 @@ namespace DynamicCalcApi.BL
             {
                 connection.Open();
 
-                // הגדרות אופטימיזציה ל-SQLite למניעת Database is locked
                 using (var walCmd = new SqliteCommand("PRAGMA journal_mode=WAL; PRAGMA synchronous=NORMAL;", connection))
                 {
                     walCmd.ExecuteNonQuery();
                 }
 
-                // 1. שליפת כל התרגילים מהטבלה t_targil
+                //  שליפת כל התרגילים מהטבלה t_targil
                 var formulas = new List<dynamic>();
                 using (var getTasksCmd = new SqliteCommand("SELECT * FROM t_targil", connection))
                 {
@@ -60,7 +59,7 @@ namespace DynamicCalcApi.BL
                     }
                 }
 
-                // 2. טעינת כל נתוני המקור (a, b, c, d) לזיכרון פעם אחת בלבד
+                // שליפת כל נתוני הdata 
                 DataTable dt_data = new DataTable();
                 using (var getDataCmd = new SqliteCommand("SELECT data_id, a, b, c, d FROM t_data", connection))
                 {
@@ -70,21 +69,20 @@ namespace DynamicCalcApi.BL
                     }
                 }
 
-                // 3. הרצת החישובים - לולאה על כל נוסחה
+                // מעבר בלולאה על כל נוסחא
                 foreach (var f in formulas)
                 {
+                    //תחילת חישוב זמן הריצה
                     var taskSw = Stopwatch.StartNew();
 
-                    // שימוש בטרנזקציה לכל נוסחה (מריץ אלפי שורות בשבריר שנייה)
                     using (var transaction = connection.BeginTransaction())
                     {
                         try 
                         {
-                            // הכנת פקודת ה-Insert מראש (Pre-compiled)
                             using (var insertCmd = connection.CreateCommand())
                             {
                                 insertCmd.Transaction = transaction;
-                                insertCmd.CommandText = "INSERT INTO t_results (data_id, targil_id, method, result) VALUES (@did, @tid, 'NCalc_FastMode', @res)";
+                                insertCmd.CommandText = "INSERT INTO t_results (data_id, targil_id, method, result) VALUES (@did, @tid, 'DataTable', @res)";
                                 
                                 var pDid = insertCmd.Parameters.Add("@did", SqliteType.Integer);
                                 var pTid = insertCmd.Parameters.Add("@tid", SqliteType.Integer);
@@ -93,23 +91,23 @@ namespace DynamicCalcApi.BL
                                 pTid.Value = f.targil_id;
 
                                 // בניית הנוסחה: אם יש תנאי, נשתמש בפורמט if(condition, true, false)
-                                string formulaToEvaluate = !string.IsNullOrEmpty(f.tnai) 
-                                    ? $"if({f.tnai}, {f.targil}, {f.targil_false ?? "0"})" 
-                                    : f.targil;
+                              string formulaToEvaluate = !string.IsNullOrEmpty(f.tnai)  ? $"if({f.tnai}, {f.targil}, {f.targil_false ?? "0"})" : f.targil;
+
+                              formulaToEvaluate = formulaToEvaluate.Replace("log(", "Log10(", StringComparison.OrdinalIgnoreCase);
 
                                 // יצירת אובייקט החישוב של NCalc
-                                var ncalcExpr = new Expression(formulaToEvaluate, EvaluateOptions.IgnoreCase);
-
-                                // מעבר על כל הנתונים שבזיכרון
+                                //השתמשתי בזה היות ובDataTable.compute איו אפשרות לחישוב נוסחאות מורכבות 
+                               var ncalcExpr = new Expression(formulaToEvaluate, EvaluateOptions.IgnoreCase);
+                                // מעבר על כל הדתה 
                                 foreach (DataRow row in dt_data.Rows)
                                 {
-                                    // הזנת הפרמטרים מהשורה הנוכחית
+                                    // הזנת הפרמטרים מהשורה הנוכחית כפרמטרים לנוסחא 
                                     ncalcExpr.Parameters["a"] = row["a"];
                                     ncalcExpr.Parameters["b"] = row["b"];
                                     ncalcExpr.Parameters["c"] = row["c"];
                                     ncalcExpr.Parameters["d"] = row["d"];
 
-                                    // ביצוע החישוב
+                                    // ביצוע החישוב באופן דינאמי
                                     object result = ncalcExpr.Evaluate();
                                     
                                     // עדכון ערכי הפרמטרים ב-SQL ושמירה
@@ -124,13 +122,12 @@ namespace DynamicCalcApi.BL
                             using (var logCmd = connection.CreateCommand())
                             {
                                 logCmd.Transaction = transaction;
-                                logCmd.CommandText = "INSERT INTO t_log (targil_id, method, run_time) VALUES (@tid, 'NCalc_FastMode', @time)";
+                                logCmd.CommandText = "INSERT INTO t_log (targil_id, method, run_time) VALUES (@tid, 'DataTable', @time)";
                                 logCmd.Parameters.AddWithValue("@tid", f.targil_id);
                                 logCmd.Parameters.AddWithValue("@time", taskSw.Elapsed.TotalSeconds);
                                 logCmd.ExecuteNonQuery();
                             }
 
-                            // אישור כל הפעולות בבת אחת (מבטיח ביצועים מהירים)
                             transaction.Commit();
                             taskSw.Stop();
 

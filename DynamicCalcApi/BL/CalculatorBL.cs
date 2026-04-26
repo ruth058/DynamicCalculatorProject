@@ -23,18 +23,12 @@ namespace DynamicCalcApi.BL
 
         public  static List<object> RunDynamicExpresso()
         {
-            Console.WriteLine("\n[API REACHED] Starting calculation...");
 
             using var connection = new SqliteConnection(_connectionString);
             connection.Open();
-             // 1. ניקוי תוצאות קודמות של אותה שיטה כדי לא לנפח את הדאטה בייס
-            using (var clearCmd = connection.CreateCommand())
-            {
-                clearCmd.CommandText = "DELETE FROM t_results WHERE method = 'DynamicExpresso'";
-                clearCmd.ExecuteNonQuery();
-            }
+         
 
-                  // 2. שליפת התרגילים מהטבלה t_targil
+            // שליפת התרגילים מהטבלה t_targil
             var formulas = new List<Targil>();
             using (var getTasksCmd = connection.CreateCommand())
             {
@@ -52,15 +46,16 @@ namespace DynamicCalcApi.BL
                 }
             }
 
+//שימוש בספריה הנ"ל והגדרה של הפונקציות המטמטיות בהן ארצה להשתמש
             var interpreter = new Interpreter();
 
                 interpreter.Reference(typeof(Math)); 
     interpreter.SetFunction("sqrt", (Func<double, double>)Math.Sqrt);
     interpreter.SetFunction("abs", (Func<double, double>)Math.Abs);
-    interpreter.SetFunction("log", (Func<double, double>)Math.Log);
+    interpreter.SetFunction("log", (Func<double, double>)Math.Log10);
     interpreter.SetFunction("pow", (Func<double, double, double>)Math.Pow);
             var summary = new List<object>();
-
+//מעבר על כל התרגילים שיש 
             foreach (var f in formulas)
             {
                 int processedRows = 0;
@@ -72,7 +67,7 @@ namespace DynamicCalcApi.BL
                     new Parameter("d", typeof(double))
                 };
 
-                   // בניית הלמדות (Lambda expressions) מראש לשיפור ביצועים
+//בדיקה שיש תנאי לתרגיל במידה ויש ועומדים בתנאי משתמשים בתרגיל הרגיל במידה ולא נלקח התרגיל השני
                 var mainLambda = interpreter.Parse(f.targil, parameters);
                 var conditionLambda = !string.IsNullOrEmpty(f.tnai) ? interpreter.Parse(f.tnai, parameters) : null;
                 var falseLambda = !string.IsNullOrEmpty(f.false_targil) ? interpreter.Parse(f.false_targil, parameters) : null;
@@ -103,6 +98,7 @@ namespace DynamicCalcApi.BL
 
                     double finalValue = 0;
                     //בדיקה האם יש תנאי למתודה
+                   //חישוב באמצעות הספריה 
                     if (conditionLambda != null)
                     {
                        bool isTrue = (bool)conditionLambda.Invoke(a, b, c, d);

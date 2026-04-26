@@ -17,7 +17,6 @@ namespace DynamicCalcApi.Controllers
     [Route("api/v3/run-calc")]
     public class DataTableCalcController : ControllerBase
    {
-     private readonly string _connectionString = "Data Source=calculator.db";
      
         [HttpGet]
         [Route("RunDataTableCalculation")]
